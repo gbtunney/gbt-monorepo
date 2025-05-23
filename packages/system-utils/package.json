@@ -1,16 +1,14 @@
 {
-    "name": "@gbt/system-utils",
+    "name": "@snailicide/netgear-reboot",
     "version": "0.0.0",
     "private": false,
-    "description": "Example monorepo package",
+    "description": "Netgear does not provide a cli command for rebooting this router so this is an attempted workaround",
     "bin": {
-        "reboot": "node ./dist/index.mjs",
-        "reboot-headless": "node ./dist/headless.mjs"
+        "reboot": "node ./dist/index.mjs"
     },
     "scripts": {
         "\n========== RUN >> ==========": "",
-        "build:headless": "pnpm exec node ./dist/headless.mjs",
-        "build:reboot": "pnpm exec node ./dist/index.mjs",
+        "reboot": "pnpm exec node ./dist/index.mjs",
         "dev:reboot": "pnpm exec tsx ./src/index.ts",
         "\n========== DEVELOPMENT >> ==========": "",
         "dev": "pnpm build:ts --watch",
@@ -40,8 +38,8 @@
         "fix:md": "pnpm run lint:md --fix",
         "fix:self": "pnpm prettier --write && pnpm lint --fix",
         "\n========== CODE STYLE >> ==========": "",
-        "prettier": "cross-var prettier ./.husky/* --ignore-path ./.gitignore --no-error-on-unmatched-pattern {$npm_package_config_prettier_path}.{$npm_package_config_prettier_extensions} --config $(git rev-parse --show-toplevel)/$npm_package_config_prettier_config",
-        "lint": "cross-var eslint -c $(git rev-parse --show-toplevel)/$npm_package_config_eslint_config",
+        "prettier": "prettier --ignore-path ./.gitignore --no-error-on-unmatched-pattern .",
+        "lint": "pnpm exec eslint .",
         "lint:md": "pnpm exec markdownlint-cli2 '{./*,./**/*}.md' '#**/node_modules/**' '#packages/test-package/**/*' ",
         "postinstall": "pnpm exec puppeteer  browsers install chrome"
     },
@@ -95,18 +93,15 @@
             "extensions": "ts,js,cjs,mjs,cts,mts,sh,html,json,yaml,yml,graphql,md",
             "path": "*,**/*",
             "config": "prettier.config.js"
-        },
-        "eslint": {
-            "extensions": "ts,js,cjs,mjs",
-            "path": "*",
-            "config": "eslint.config.js"
         }
     },
     "packageManager": "pnpm@10.9.0",
     "dependencies": {
+        "@snailicide/cli-app": "^0.4.0",
         "@types/cli-progress": "^3.11.6",
-        "cli-progress": "^3.12.0",
+        "ora": "^8.2.0",
         "puppeteer": "^24.8.2",
-        "puppeteer-core": "^24.8.2"
+        "puppeteer-core": "^24.8.2",
+        "zod": "^3.25.23"
     }
 }

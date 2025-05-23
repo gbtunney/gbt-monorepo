@@ -17,12 +17,7 @@ const CONFIG_OBJ = [
             {
                 export_key: '*',
                 export_types: ['default', 'import', 'require', 'types'],
-                library_name: 'gbtBoilerplate',
-            },
-            {
-                export_key: 'headless',
-                export_types: ['default', 'import', 'require', 'types'],
-                library_name: 'gbtBoilerplate',
+                library_name: 'gbtRebootRouter',
             },
         ],
         rollup.DEFAULT_PLUGINS_BUNDLED,
