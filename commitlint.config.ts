@@ -7,7 +7,7 @@ import { commitlint, CommitlintUserConfig } from '@snailicide/build-config'
 
 const Configuration: CommitlintUserConfig = commitlint.configuration([
     'root',
-    'system-utils',
+    '@snailicide/netgear-reboot',
     '@gbt/example-package',
     'todo:fix disable scope',
 ])
