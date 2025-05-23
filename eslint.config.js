@@ -16,7 +16,7 @@ export default [
         rules: {},
     }),
     ...tsEslint.config({
-        files: ['./packages/system-utils/**/*.ts'],
+        files: ['./packages/netgear-reboot/**/*.ts'],
         rules: {
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/no-floating-promises': 'warn',
