@@ -9,6 +9,7 @@ const Configuration: CommitlintUserConfig = commitlint.configuration([
     'root',
     '@snailicide/netgear-reboot',
     '@gbt/example-package',
+    'home-assistant',
     'todo:fix disable scope',
 ])
 

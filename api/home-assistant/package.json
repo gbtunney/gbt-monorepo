@@ -1,0 +1,56 @@
+{
+    "name": "home-assistant",
+    "version": "0.0.0",
+    "description": "Homeassistant Scripts",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "\n========== HOME-ASSISTANT >> ==========": "",
+        "ui": "pnpm open:chrome http://192.168.1.25:8123",
+        "sh": "ssh -t root@homeassistant.local -p 22222",
+        "device:sheet": "cross-var pnpm exec open $npm_package_config_spreadsheet",
+        "\n========== CLI >> ==========": "",
+        "cli": "pnpm run sh ha",
+        "cli:help": "pnpm run cli --help",
+        "ha:updates:list": "pnpm cli available-updates",
+        "ha:restart:all": "pnpm ha:core:restart && ha:supervisor:restart",
+        "\n========== CORE >> ==========": "",
+        "ha:core": "pnpm cli core",
+        "ha:core:check": "pnpm ha:core check",
+        "ha:core:update": "pnpm ha:core update",
+        "ha:core:restart": "pnpm ha:core restart",
+        "ha:core:rebuild": "pnpm ha:core rebuild",
+        "\n========== SUPERVISOR >> ==========": "",
+        "ha:supervisor": "pnpm cli supervisor",
+        "ha:supervisor:check": "pnpm ha:supervisor info",
+        "ha:supervisor:update": "pnpm ha:supervisor update",
+        "ha:supervisor:restart": "pnpm ha:supervisor restart",
+        "\n========== ADDONS >> ==========": "",
+        "ha:addons:list": "pnpm cli addons",
+        "ha:addons:update": "pnpm cli addons update --",
+        "ha:addons:updates:list": "pnpm cli addons available-updates",
+        "ha:addons:help": "pnpm cli addons --help",
+        "\n========== CONTAINERS >> ==========": "",
+        "containers:list": "pnpm sh docker ps -a",
+        "containers:core:sh": "pnpm sh 'docker exec -it homeassistant'",
+        "\n========== UTILITIES >> ==========": "",
+        "hostname": "pnpm containers:core:sh hostname -i",
+        "open:chrome": "open -a /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome  --url"
+    },
+    "config": {
+        "spreadsheet": "https://docs.google.com/spreadsheets/d/1hc20vN-Wjua246a5isvj_0qQmEQjVAbvTzwioo6n9E0/edit?usp=sharing"
+    },
+    "engines": {
+        "node": ">=18.7.0 <22.0.0",
+        "pnpm": ">=10.0.0",
+        "docker": ">=28.2.0"
+    },
+    "author": {
+        "name": "Gillian Tunney",
+        "email": "gbtunney@mac.com"
+    },
+    "devDependencies": {
+        "cross-var": "^1.1.0",
+        "dotenv-cli": "^8.0.0"
+    }
+}
