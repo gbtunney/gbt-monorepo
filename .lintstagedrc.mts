@@ -8,6 +8,7 @@ import {
 const mdIgnores = [
     '#**/{node_modules,.changeset,docs,scratch}/**',
     '#packages/cli-template/templates/**/*',
+    '#api/gbt-tuya-device',
 ]
 
 /** TODO: had to remove the type so i could use staged function */
