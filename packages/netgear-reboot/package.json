@@ -3,13 +3,11 @@
     "version": "0.0.0",
     "private": false,
     "description": "Netgear does not provide a cli command for rebooting this router so this is an attempted workaround",
-    "bin": {
-        "reboot": "node ./dist/index.mjs"
-    },
     "scripts": {
         "\n========== RUN >> ==========": "",
         "reboot": "pnpm exec node ./dist/index.mjs",
         "dev:reboot": "pnpm exec tsx ./src/index.ts",
+        "open": "open http://192.168.1.1/",
         "\n========== DEVELOPMENT >> ==========": "",
         "dev": "pnpm build:ts --watch",
         "dev:ts": "pnpm build:ts --watch",
@@ -43,26 +41,17 @@
         "lint:md": "pnpm exec markdownlint-cli2 '{./*,./**/*}.md' '#**/node_modules/**' '#packages/test-package/**/*' ",
         "postinstall": "pnpm exec puppeteer  browsers install chrome"
     },
-    "exports": {
-        ".": {
-            "default": "./dist/index.js",
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.cjs",
-            "types": "./dist/index.d.ts"
-        }
-    },
     "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
     "module": "./dist/index.mjs",
-    "commonjs": "./dist/index.cjs",
-    "keywords": [
-        "boilerplate"
-    ],
-    "files": [
-        "types",
-        "dist",
-        "CHANGELOG.md"
-    ],
+    "types": "./dist/index.d.ts",
+    "dependencies": {
+        "@snailicide/cli-app": "^0.4.0",
+        "@types/cli-progress": "^3.11.6",
+        "ora": "^8.2.0",
+        "puppeteer": "^24.8.2",
+        "puppeteer-core": "^24.8.2",
+        "zod": "^3.25.23"
+    },
     "devDependencies": {
         "@snailicide/build-config": "^1.4.0",
         "@types/node": "^22.13.1",
@@ -73,21 +62,41 @@
         "typescript": "^5.7.3",
         "vitest": "^3.0.5"
     },
-    "engines": {
-        "node": ">=18.7.0 <22.0.0",
-        "pnpm": ">=9.0.0"
-    },
-    "license": "MIT",
     "type": "module",
+    "exports": {
+        ".": {
+            "default": "./dist/index.js",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs",
+            "types": "./dist/index.d.ts"
+        }
+    },
     "author": {
         "name": "Gillian Tunney",
         "email": "gbtunney@mac.com"
     },
-    "homepage": "https://github.com/gbtunney/gbt-boilerplate",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/gbtunney/gbt-boilerplate"
     },
+    "homepage": "https://github.com/gbtunney/gbt-boilerplate",
+    "packageManager": "pnpm@10.9.0",
+    "engines": {
+        "node": ">=18.7.0 <22.0.0",
+        "pnpm": ">=9.0.0"
+    },
+    "bin": {
+        "reboot": "node ./dist/index.mjs"
+    },
+    "files": [
+        "CHANGELOG.md",
+        "dist",
+        "types"
+    ],
+    "keywords": [
+        "boilerplate"
+    ],
     "config": {
         "prettier": {
             "extensions": "ts,js,cjs,mjs,cts,mts,sh,html,json,yaml,yml,graphql,md",
@@ -95,13 +104,5 @@
             "config": "prettier.config.js"
         }
     },
-    "packageManager": "pnpm@10.9.0",
-    "dependencies": {
-        "@snailicide/cli-app": "^0.4.0",
-        "@types/cli-progress": "^3.11.6",
-        "ora": "^8.2.0",
-        "puppeteer": "^24.8.2",
-        "puppeteer-core": "^24.8.2",
-        "zod": "^3.25.23"
-    }
+    "commonjs": "./dist/index.cjs"
 }
