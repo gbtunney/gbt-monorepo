@@ -1,13 +1,13 @@
 {
-    "name": "home-assistant",
+    "name": "@gbt/home-assistant",
     "version": "0.0.0",
-    "description": "Homeassistant Scripts",
     "private": true,
-    "type": "module",
+    "description": "Homeassistant Scripts",
     "scripts": {
         "\n========== HOME-ASSISTANT >> ==========": "",
-        "ui": "pnpm open:chrome http://192.168.1.25:8123",
-        "sh": "ssh -t root@homeassistant.local -p 22222",
+        "sh": "ssh homeassistant",
+        "ui": "cross-var pnpm exec pnpm open:firefox $npm_package_config_homeassistant_ui",
+        "ui:settings": "cross-var pnpm exec pnpm open:firefox $npm_package_config_homeassistant_ui/config/dashboard",
         "device:sheet": "cross-var pnpm exec open $npm_package_config_spreadsheet",
         "\n========== CLI >> ==========": "",
         "cli": "pnpm run sh ha",
@@ -35,22 +35,57 @@
         "containers:core:sh": "pnpm sh 'docker exec -it homeassistant'",
         "\n========== UTILITIES >> ==========": "",
         "hostname": "pnpm containers:core:sh hostname -i",
-        "open:chrome": "open -a /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome  --url"
+        "open:chrome": "open -a /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome  --url",
+        "open:firefox": "open -a /Applications/Firefox.app/Contents/MacOS/firefox",
+        "\n========== CLASP >> ==========": "",
+        "clasp:status": "pnpm exec clasp status --ignore ./.claspignore ",
+        "clasp:push": "pnpm exec clasp push  $npm_package_config_document_id",
+        "clasp:login": "pnpm clasp login",
+        "clasp:open:parent": "cross-var pnpm exec open https://docs.google.com/spreadsheets/d/$npm_package_config_parent_id",
+        "clasp:open:script": "pnpm exec clasp open",
+        "clasp:help": "pnpm exec clasp --help",
+        "\n========== BUILD >> ==========": "",
+        "build": "pnpm build:ts && pnpm build:esbuild && pnpm build:cp &&  pnpm clasp:status",
+        "build:esbuild": "pnpm exec tsx  ./esbuild.ts",
+        "build:cp": "cp ./appsscript.json ./dist ",
+        "build:ts": "tsc --build",
+        "\n========== DEV >> ==========": "",
+        "dev": "tsc  --build --watch",
+        "\n========== PUBLISH >> ==========": "",
+        "build:deploy": "pnpm clean && pnpm build && pnpm clasp:push",
+        "\n========== CLEAN >> ==========": "",
+        "clean": "pnpm clean:ts && pnpm clean:build",
+        "clean:build": "rm -R -f dist && rm -R -f types",
+        "clean:ts": "tsc --build --clean",
+        "\n========== CODE STYLE >> ==========": "",
+        "prettier": "cross-var prettier {$npm_package_config_prettier_path}.{$npm_package_config_prettier_extensions} --ignore-path ./.gitignore --write",
+        "\n========== CHECK >> ==========": "",
+        "check": "pnpm build:ts",
+        "\n========== FIX >> ==========": "",
+        "fix": "pnpm prettier"
     },
-    "config": {
-        "spreadsheet": "https://docs.google.com/spreadsheets/d/1hc20vN-Wjua246a5isvj_0qQmEQjVAbvTzwioo6n9E0/edit?usp=sharing"
+    "devDependencies": {
+        "@google/clasp": "^2.4.2",
+        "@types/google-apps-script": "^1.0.83",
+        "cross-var": "^1.1.0",
+        "dotenv-cli": "^8.0.0",
+        "esbuild": "^0.23.0",
+        "tsx": "^4.19.0",
+        "typescript": "^5.6.3"
     },
-    "engines": {
-        "node": ">=18.7.0 <22.0.0",
-        "pnpm": ">=10.0.0",
-        "docker": ">=28.2.0"
-    },
+    "type": "module",
     "author": {
         "name": "Gillian Tunney",
         "email": "gbtunney@mac.com"
     },
-    "devDependencies": {
-        "cross-var": "^1.1.0",
-        "dotenv-cli": "^8.0.0"
+    "engines": {
+        "docker": ">=28.2.0",
+        "node": ">=18.7.0 <22.0.0",
+        "pnpm": ">=10.0.0"
+    },
+    "config": {
+        "parent_id": "1aDs1AWQ1PRs3-S_aikYVVE5Uecph6hlXuHhjVdyeZf4",
+        "spreadsheet": "https://docs.google.com/spreadsheets/d/1hc20vN-Wjua246a5isvj_0qQmEQjVAbvTzwioo6n9E0/edit?usp=sharing",
+        "homeassistant_ui": "http://homeassistant.local:8123"
     }
 }
