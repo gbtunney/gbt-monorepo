@@ -38,7 +38,7 @@
         "\n========== CODE STYLE >> ==========": "",
         "prettier": "cross-var prettier {*,**/*}.{xml,ts,js,cts,cjs,mts,mjs,tsx,jsx,sh,html,json,yaml,yml,graphql,md} ./.husky/* --ignore-path ./.gitignore --no-error-on-unmatched-pattern --config ./prettier.config.js",
         "lint": "cross-var eslint -c $npm_package_config_eslint_config",
-        "lint:md": "pnpm exec markdownlint-cli2 '{./*,./**/*}.md' '#**/{node_modules,.changeset,docs}/**' '#api/gbt-tuya-device/**/*' '#packages/cli-template/templates/**/*'",
+        "lint:md": "pnpm exec markdownlint-cli2 '{./*,./**/*}.md' '#**/{.history,node_modules,.changeset,docs}/**' '#api/gbt-tuya-device/**/*' '#packages/cli-template/templates/**/*'",
         "\n========== CHECK >> ==========": "",
         "check": "pnpm check:self",
         "check:md": "pnpm run lint:md",

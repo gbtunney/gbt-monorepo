@@ -16,6 +16,7 @@ export default [
             '**/venv/**',
             '**/__pycache__/**',
             '**/*.py', // ignore Python files
+            // './packages/google-calendar-util'
         ],
     },
     ...tsEslint.config({

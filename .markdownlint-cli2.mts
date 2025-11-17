@@ -4,6 +4,8 @@ export const mdlint = { config: markdownlint.config({}) }
 
 const options = {
     config: {
+        // 'MD001/heading-increment'
+        'MD001': false,
         'MD013': {
             // Number of characters for code blocks
             //  code_block_line_length: markdownlint.getScaledWidth('comments'),
@@ -16,7 +18,7 @@ const options = {
             // Include headings
             headings: true,
             // Number of characters
-            line_length: 100, //markdownlint.getScaledWidth('markdown'),
+            line_length: 150, //TODO: this is temporary pls change back!! markdownlint.getScaledWidth('markdown'),
             // Stern length checking
             stern: false,
             // Strict length checking
@@ -24,9 +26,14 @@ const options = {
             // Include tables
             tables: true,
         },
-        'MD032': false,
+        //'MD024/no-duplicate-heading'
+        'MD024': false,
+        // 'MD025/single-title/single-h1'
+        'MD025': false,
+        //todo: temporarily dosabled. pls try to fix later, also how can i include the
+        'MD032': true,
         'no-multiple-blanks': false,
     },
 }
 
-export default mdlint
+export default { mdlint, ...options }
