@@ -60,7 +60,7 @@ jobs:
 
             - name: 📥 Install dependencies
               if: ${{ inputs.install }}
-              run: pnpm install --no-frozen-lockfile
+              run: pnpm install --frozen-lockfile
 
             - name: 🛠️ Build packages
               if: ${{ inputs.build }}
