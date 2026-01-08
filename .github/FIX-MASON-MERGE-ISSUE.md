@@ -33,7 +33,7 @@ Updated the fetch refspec to the standard configuration that fetches all branche
 After the fix:
 - ✅ Main branch is visible: `origin/main` exists
 - ✅ All 7 remote branches are now tracked (previously only 1)
-- ✅ Git status correctly shows: "Your branch is ahead of 'origin/main' by 1 commit"
+- ✅ Git status correctly shows branch is ahead of main (commits vary as work progresses)
 - ✅ Can compare and merge with main branch
 - ✅ Changeset configuration correctly references `"baseBranch": "main"`
 
