@@ -1,6 +1,4 @@
-/**
- * <reference types="google-apps-script" />
- */
+/** <reference types="google-apps-script" /> */
 export function asString(v: unknown): string {
     if (v == null) return ''
     if (typeof v === 'string') return v
