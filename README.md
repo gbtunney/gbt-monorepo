@@ -1,5 +1,12 @@
 # gbt-boilerplate 🐌
 
+> **Note:** Recent changes merged from PRs #2, #5, and #9:
+> - Fixed Git hooks (pre-commit, pre-push, commit-msg) with proper shebangs
+> - Fixed linting and formatting issues across the codebase
+> - Updated ESLint configuration with projectService enabled
+> - Restored pnpm-lock.yaml tracking (removed from .gitignore)
+> - These changes are now visible in main after merge
+
 [![NPM](https://img.shields.io/npm/v/gbt-boilerplate)](http://www.npmjs.com/package/gbt-boilerplate)
 ![License: MIT](https://img.shields.io/npm/l/gbt-boilerplate)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
