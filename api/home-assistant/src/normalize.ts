@@ -10,9 +10,9 @@ export function ensureNormalized(
     const raw = ss.getSheetByName(rawSheetName)
     if (!raw) return
     const norm = getOrCreateSheet(ss, normSheetName)
-    const rawValues = raw.getDataRange().getValues() as Array<Array<| string
-        | number
-        | boolean>>
+    const rawValues = raw.getDataRange().getValues() as Array<
+        Array<string | number | boolean>
+    >
     if (rawValues.length === 0) {
         ensureSheetSize(norm, 1, desiredHeaders.length)
         norm.clearContents()

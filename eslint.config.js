@@ -19,6 +19,14 @@ export default [
             // './packages/google-calendar-util'
         ],
     },
+    // Fix: Remove 'project' setting when 'projectService' is enabled
+    {
+        languageOptions: {
+            parserOptions: {
+                project: null,
+            },
+        },
+    },
     ...tsEslint.config({
         extends: [tsEslint.configs.disableTypeChecked],
         files: ['**/*.js', '**/*.d.*'],
