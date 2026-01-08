@@ -1,4 +1,3 @@
-
 export function onOpen(): void {
     SpreadsheetApp.getUi()
         .createMenu('Home Assistant')

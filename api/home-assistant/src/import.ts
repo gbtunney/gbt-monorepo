@@ -102,17 +102,13 @@ export function importAll(): void {
                 summary.push(`${sheetName}: ❌ HTTP ${numberToString(status)}`)
                 continue
             }
-            const csvRows = Utilities.parseCsv(
-                resp.getContentText(),
-            )
+            const csvRows = Utilities.parseCsv(resp.getContentText())
             if (csvRows.length <= 1) {
                 summary.push(`${sheetName}: ⚠️ Empty CSV`)
                 continue
             }
-            /**
-             * length > 1 guarantees header exists
-             */
-            const headerRow = csvRows[0] as Array<string> 
+            /** Length > 1 guarantees header exists */
+            const headerRow = csvRows[0] as Array<string>
             if (!headerRow || headerRow.length === 0) {
                 summary.push(`${sheetName}: ⚠️ Missing header row`)
                 continue

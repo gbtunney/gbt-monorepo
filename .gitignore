@@ -123,9 +123,6 @@ yarn.lock
 package.lock
 npm-shrinkwrap.json
 
-# Pnpm's lockfile (should be removed on production)
-pnpm-lock.yaml
-
 # VSCode History
 .history
 
