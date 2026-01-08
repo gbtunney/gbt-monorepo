@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 PROTECTED_BRANCHES="^(master|main)"
 LINT_MODE="LINT_STAGED" # other values: LINT_ALL | DISABLED
 
 # Force LINT_ALL on development branch
-if [[ "$BRANCH" == "development" ]]; then
+if [ "$BRANCH" = "development" ]; then
     LINT_MODE="LINT_ALL"
 fi
 
@@ -13,18 +13,18 @@ echo "\n===\n>> Running in shell:: $SHELL"
 echo ">> Pre-commit Hook:: Checking BRANCH: $BRANCH LINT_MODE: $LINT_MODE \n===\n"
 
 # Protect branches from accidental commits.
-if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]; then
+if echo "$BRANCH" | grep -Eq "$PROTECTED_BRANCHES"; then
     echo "\n🚫 Commit directly to BRANCH: $BRANCH is not allowed!\n" && exit 1
 fi
 # Validate branch name.
-if [[ "$BRANCH" =~ ^[a-z]*([/-][a-z]+)*$ ]]; then
+if echo "$BRANCH" | grep -Eq "^[a-z]*([/-][a-z]+)*$"; then
     echo "🐛 Branch name is valid!!"
 else
     echo "\n🚫Branch name should be lowercase and NOT have any characters besides - or / :::: please rename your branch $BRANCH\n" && exit 1
 fi
 
 # IF lint-staged IS NOT being used
-if [[ "$LINT_MODE" == 'LINT_ALL' ]]; then
+if [ "$LINT_MODE" = "LINT_ALL" ]; then
     echo -e "\n🚫 LINT_ALL ($BRANCH), checking + fixing ALL FILES  before commit \n"
     # Run formatter,lint
     pnpm lint:all
@@ -32,7 +32,7 @@ if [[ "$LINT_MODE" == 'LINT_ALL' ]]; then
     git add $(git diff HEAD --diff-filter=MAR --cached --name-only)
 fi
 
-if [[ "$LINT_MODE" == 'LINT_STAGED' ]]; then
+if [ "$LINT_MODE" = "LINT_STAGED" ]; then
     # Run lint staged
     echo -e "\n🚫 LINT_STAGED ($BRANCH), running lint-staged before commitizen \n"
 fi
