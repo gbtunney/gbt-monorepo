@@ -1,0 +1,51 @@
+import type { StorybookConfig } from '@storybook/react-vite'
+
+import path from 'path'
+import { createRequire } from 'module'
+
+const require = createRequire(import.meta.url)
+
+/**
+ * This function is used to resolve the absolute path of a package. It is needed in projects that use Yarn PnP or are
+ * set up within a monorepo.
+ */
+function getAbsolutePath(value: string): string {
+    return path.dirname(require.resolve(path.join(value, 'package.json')))
+}
+
+const config: StorybookConfig = {
+    addons: [
+        getAbsolutePath('@storybook/addon-docs'),
+        getAbsolutePath('@storybook/addon-vitest'),
+        getAbsolutePath('@chromatic-com/storybook'),
+        //getAbsolutePath('@storybook/addon-onboarding')
+        //  getAbsolutePath('@chromatic-com/storybook'),
+    ],
+    framework: {
+        name: getAbsolutePath('@storybook/react-vite'),
+        options: {},
+    },
+    stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    typescript: {
+        check: true,
+        reactDocgen: 'react-docgen-typescript',
+        reactDocgenTypescriptOptions: {
+            propFilter: (prop) => {
+                // Exclude the 'css' prop
+                if (prop.name === 'css' || prop.name === 'style') {
+                    return false
+                }
+                if (prop.name === 'cssStyles') {
+                    return true
+                }
+                const res = !/node_modules/.test(prop.parent?.fileName ?? '')
+                return prop.parent ? res : true
+            },
+            shouldExtractLiteralValuesFromEnum: true,
+            shouldExtractValuesFromUnion: true,
+            shouldIncludeExpression: false,
+            shouldRemoveUndefinedFromOptional: true,
+        },
+    },
+}
+export default config
