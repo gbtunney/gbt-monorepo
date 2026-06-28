@@ -6,6 +6,7 @@
         "jsxFragmentFactory": null,
         "jsx": "react-jsx",
         "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "types": ["node"],
         "allowImportingTsExtensions": true,
         "emitDeclarationOnly": true
     },
@@ -15,5 +16,10 @@
         "./src/**/*.mts",
         "./src/**/*.tsx"
     ],
-    "exclude": ["**/*.test.ts", "**/*.test.mts", "**/*.test.cts"]
+    "exclude": [
+        "**/*.test.ts",
+        "**/*.test.mts",
+        "**/*.test.cts",
+        "./src/stories/**"
+    ]
 }

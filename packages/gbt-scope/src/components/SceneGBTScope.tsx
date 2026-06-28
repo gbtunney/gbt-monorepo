@@ -14,9 +14,11 @@ import {
     type CSSProperties,
     type ReactElement,
     useEffect,
+    useRef,
     useState,
 } from 'react'
 import MaterialRadialSymmetry, {
+    defaultMaterialRadialSymmetryProps,
     type MaterialRadialSymmetryProps,
 } from './MaterialRadialSymmetry.tsx'
 import {
@@ -24,6 +26,13 @@ import {
     type Dimensions,
     setOrthoCamera,
 } from '../helpers.ts'
+import {
+    applyCurve,
+    isTupleCurve,
+    tupleToGbtScopeCurve,
+} from '../motion/curve.ts'
+import { createPointerState } from '../motion/pointer.ts'
+import { type GbtScopeCurve } from '../types.ts'
 
 export type SceneGBTScopeProps = {
     /** This is the aspect ratio of the html5canvas */
@@ -33,6 +42,27 @@ export type SceneGBTScopeProps = {
     resolution?: 'screen' | Dimensions | null
     bg_color?: Chromable
 } & Omit<MaterialRadialSymmetryProps, 'mesh' | 'dimensions'>
+
+/**
+ * Default props for the flat viewer. Single source of truth for both the
+ * component defaults and the Storybook args (composes the shared material
+ * defaults with flat-scene-specific values).
+ */
+export const defaultSceneGBTScopeProps = {
+    ...defaultMaterialRadialSymmetryProps,
+    aspect_ratio: 1 as number | 'parent',
+    bg_color: 'red' as Chromable,
+    cameraSettings: {
+        enabled: false,
+        ortho: true,
+        target: [0, 0, 0],
+    } as CameraOrthoConfig,
+    mouse_curve: [0, 0.015] as [number, number] | GbtScopeCurve,
+    mouse_multiplier: 0.01,
+    offsetScale: 0.02,
+    resolution: 'screen' as 'screen' | Dimensions | null,
+    src: 'uv-checker.png',
+} satisfies SceneGBTScopeProps
 
 const SceneGBTScope = ({
     aspect_ratio = 1,
@@ -44,8 +74,9 @@ const SceneGBTScope = ({
         target: [0, 0, 0],
     },
     fps = 60,
+    imageAspect,
     image_aspect = 1,
-    mouse_curve = [0, 0.015] as [number, number],
+    mouse_curve = defaultSceneGBTScopeProps.mouse_curve,
     mouse_multiplier = 0.01,
     name = 'kaleidoscope',
     offset = [0, 0],
@@ -60,6 +91,7 @@ const SceneGBTScope = ({
     segments = 6,
     src = 'uv-checker.png',
     tiling = 1,
+    tileMode = defaultMaterialRadialSymmetryProps.tileMode,
 }: SceneGBTScopeProps): ReactElement => {
     const [scene, setScene] = useState<Scene | null>(null)
     const [plane, setPlane] = useState<Mesh | null>(null)
@@ -67,6 +99,21 @@ const SceneGBTScope = ({
     const [_dimensions, setDimensions] = useState<Dimensions | undefined>(
         undefined,
     )
+
+    // Resolved pointer-response curve, kept in a ref so the render-loop
+    // observable (registered once in onSceneReady) reads live values as the
+    // Storybook controls change mouse_curve / mouse_multiplier.
+    const curveRef = useRef<GbtScopeCurve>(
+        isTupleCurve(mouse_curve)
+            ? tupleToGbtScopeCurve(mouse_curve, mouse_multiplier)
+            : mouse_curve,
+    )
+    useEffect(() => {
+        curveRef.current = isTupleCurve(mouse_curve)
+            ? tupleToGbtScopeCurve(mouse_curve, mouse_multiplier)
+            : mouse_curve
+    }, [mouse_curve, mouse_multiplier])
+
     const customStyle: CSSProperties = {
         backgroundColor: colorUtils.isValidColor(bg_color)
             ? colorUtils.getChromaColor(bg_color)?.hex()
@@ -141,38 +188,24 @@ const SceneGBTScope = ({
             canvas.tabIndex = 1 // Ensure the canvas can receive keyboard events
         }
 
-        // Mouse state — plain object so the observable closure always reads current values
-        const mouseState = { x: 0, y: 0 }
-
+        // Pointer state — mutable object the observable reads each frame.
+        const pointer = createPointerState()
         if (canvas) {
-            const handleMouseMove = (event: MouseEvent): void => {
-                const rect = canvas.getBoundingClientRect()
-                mouseState.x =
-                    ((event.clientX - rect.left) / rect.width) * 2 - 1
-                mouseState.y =
-                    ((event.clientY - rect.top) / rect.height) * 2 - 1
-            }
-            const handleMouseLeave = (): void => {
-                mouseState.x = 0
-                mouseState.y = 0
-            }
-            canvas.addEventListener('mousemove', handleMouseMove)
-            canvas.addEventListener('mouseleave', handleMouseLeave)
+            pointer.attach(canvas)
             _scene.onDisposeObservable.add(() => {
-                canvas.removeEventListener('mousemove', handleMouseMove)
-                canvas.removeEventListener('mouseleave', handleMouseLeave)
+                pointer.detach(canvas)
             })
         }
 
-        // Accumulate rotation each frame; speed increases with mouse distance from center
+        // Accumulate rotation each frame; speed increases with pointer distance
+        // from center, shaped by the live curve (curveRef updates with controls).
         let currentRotation = rotation
         const BASE_SPEED = 0.003
         _scene.onBeforeRenderObservable.add(() => {
-            const dist = Math.sqrt(mouseState.x ** 2 + mouseState.y ** 2)
-            const mouseContrib = Math.min(
-                Math.max(dist * mouse_multiplier, mouse_curve[0]),
-                mouse_curve[1],
+            const dist = Math.sqrt(
+                pointer.state.x ** 2 + pointer.state.y ** 2,
             )
+            const mouseContrib = applyCurve(dist, curveRef.current)
             currentRotation += BASE_SPEED + mouseContrib
             const mat = planeMesh.material as ShaderMaterial
             if (mat) mat.setFloat('uRotation', currentRotation)
@@ -200,12 +233,14 @@ const SceneGBTScope = ({
                         rotation={rotation}
                         scaleFactor={scaleFactor}
                         tiling={tiling}
+                        tileMode={tileMode}
                         offset={_offset}
                         offset_speed={offset_speed}
                         rotationScale={rotationScale}
                         rotation_speed={0}
                         offsetScale={offsetScale}
                         opacity={opacity}
+                        imageAspect={imageAspect}
                         image_aspect={image_aspect}
                         onInit={(props) => {
                             console.log(

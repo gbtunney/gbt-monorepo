@@ -11,6 +11,7 @@ import {
     fragmentShader,
     vertexShader,
 } from '../materials/shader-radial-symmetry.js'
+import { type GbtScopeCurve, type GbtScopeTileMode } from '../types.js'
 
 export type MaterialRadialSymmetryProps = {
     name?: string
@@ -26,7 +27,9 @@ export type MaterialRadialSymmetryProps = {
     offsetScale?: number
     rotation?: number
     offset?: [number, number]
-    /** Aspect ratio for src image file */
+    /** Aspect ratio for src image file. camelCase canonical name. */
+    imageAspect?: number
+    /** @deprecated Legacy alias for {@link imageAspect}. */
     image_aspect?: number
     opacity?: number
     blendMode?: string
@@ -34,7 +37,12 @@ export type MaterialRadialSymmetryProps = {
     /** Rotation Speed will animate if value is greater than 0 */
     rotation_speed?: number
     offset_speed?: number
-    mouse_curve?: [number, number]
+    /**
+     * Pointer-distance response curve. Accepts the legacy `[min, max]` tuple or
+     * the richer {@link GbtScopeCurve}. When a full curve is supplied its
+     * `multiplier` takes over and `mouse_multiplier` is ignored.
+     */
+    mouse_curve?: [number, number] | GbtScopeCurve
     mouse_multiplier?: number
     onInit?: (currentProps: MaterialRadialSymmetryProps) => void
     onUpdate?: (currentProps: MaterialRadialSymmetryProps) => void
@@ -42,40 +50,78 @@ export type MaterialRadialSymmetryProps = {
     fps?: number
     /** Tiling factor for the texture */
     tiling?: number
+    /** Tiling strategy applied after the radial fold. */
+    tileMode?: GbtScopeTileMode
 }
 
+/** Maps the {@link GbtScopeTileMode} string to the shader's `uTileMode` float. */
+const tileModeToFloat = (mode: GbtScopeTileMode): number =>
+    mode === 'none' ? 0 : mode === 'mirror' ? 2 : 1
+
+/**
+ * Default values for {@link MaterialRadialSymmetryProps} (excluding the required
+ * `mesh`). Single source of truth referenced by the destructuring defaults.
+ */
+export const defaultMaterialRadialSymmetryProps = {
+    blendMode: 'normal',
+    fps: 60,
+    imageAspect: 1,
+    mouse_curve: [0, 1] as [number, number],
+    mouse_multiplier: 1,
+    name: 'kaleidoscope',
+    offset: [0, 0] as [number, number],
+    offset_speed: 0,
+    offsetScale: 1,
+    opacity: 1,
+    rotation: 0,
+    rotation_speed: 0,
+    rotationScale: 1,
+    scaleFactor: 1,
+    segments: 6,
+    speed_interval: 0.2,
+    src: '',
+    tiling: 1,
+    tileMode: 'repeat' as GbtScopeTileMode,
+} satisfies Omit<MaterialRadialSymmetryProps, 'mesh'>
+
 const MaterialRadialSymmetry = ({
-    blendMode = 'normal',
+    blendMode = defaultMaterialRadialSymmetryProps.blendMode,
     dimensions = { height: 1200, width: 1200 },
-    fps = 60,
-    image_aspect = 1,
+    fps = defaultMaterialRadialSymmetryProps.fps,
+    imageAspect,
+    image_aspect,
     mesh,
-    mouse_curve = [0, 1],
-    mouse_multiplier = 1,
-    name = 'kaleidoscope',
-    offset = [0, 0],
-    offset_speed = 0,
-    offsetScale = 1,
+    mouse_curve = defaultMaterialRadialSymmetryProps.mouse_curve,
+    mouse_multiplier = defaultMaterialRadialSymmetryProps.mouse_multiplier,
+    name = defaultMaterialRadialSymmetryProps.name,
+    offset = defaultMaterialRadialSymmetryProps.offset,
+    offset_speed = defaultMaterialRadialSymmetryProps.offset_speed,
+    offsetScale = defaultMaterialRadialSymmetryProps.offsetScale,
     onInit,
     onUpdate,
-    opacity = 1,
-    rotation = 0,
-    rotation_speed = 0,
-    rotationScale = 1,
-    scaleFactor = 1,
-    segments = 6,
-    speed_interval = 0.2,
+    opacity = defaultMaterialRadialSymmetryProps.opacity,
+    rotation = defaultMaterialRadialSymmetryProps.rotation,
+    rotation_speed = defaultMaterialRadialSymmetryProps.rotation_speed,
+    rotationScale = defaultMaterialRadialSymmetryProps.rotationScale,
+    scaleFactor = defaultMaterialRadialSymmetryProps.scaleFactor,
+    segments = defaultMaterialRadialSymmetryProps.segments,
+    speed_interval = defaultMaterialRadialSymmetryProps.speed_interval,
     src,
-    tiling = 1,
+    tiling = defaultMaterialRadialSymmetryProps.tiling,
+    tileMode = defaultMaterialRadialSymmetryProps.tileMode,
 }: MaterialRadialSymmetryProps): ReactElement | null => {
     const materialRef = useRef<ShaderMaterial | null>(null)
+
+    // camelCase `imageAspect` is canonical; fall back to the legacy alias.
+    const resolvedImageAspect = imageAspect ?? image_aspect ?? 1
 
     // Memoize getPropsObject using useCallback
     const getPropsObject = useCallback((): MaterialRadialSymmetryProps => {
         return {
             blendMode,
             dimensions,
-            image_aspect,
+            imageAspect: resolvedImageAspect,
+            image_aspect: resolvedImageAspect,
             mesh,
             mouse_curve,
             mouse_multiplier,
@@ -92,11 +138,12 @@ const MaterialRadialSymmetry = ({
             speed_interval,
             src,
             tiling,
+            tileMode,
         }
     }, [
         blendMode,
         dimensions,
-        image_aspect,
+        resolvedImageAspect,
         mesh,
         mouse_curve,
         mouse_multiplier,
@@ -113,6 +160,7 @@ const MaterialRadialSymmetry = ({
         speed_interval,
         src,
         tiling,
+        tileMode,
     ])
     // Only run this effect when the mesh or src changes
     useEffect(() => {
@@ -147,6 +195,7 @@ const MaterialRadialSymmetry = ({
                         'uScaleFactor',
                         'uImageAspect',
                         'uTiling',
+                        'uTileMode',
                     ],
                 },
             )
@@ -190,8 +239,9 @@ const MaterialRadialSymmetry = ({
         materialRef.current.setFloat('uOffsetAmount', offsetScale)
         materialRef.current.setFloat('uRotationAmount', rotationScale)
         materialRef.current.setFloat('uScaleFactor', scaleFactor)
-        materialRef.current.setFloat('uImageAspect', image_aspect)
+        materialRef.current.setFloat('uImageAspect', resolvedImageAspect)
         materialRef.current.setFloat('uTiling', tiling || 1)
+        materialRef.current.setFloat('uTileMode', tileModeToFloat(tileMode))
         materialRef.current.setVector2(
             'uOffset',
             new Vector2(offset[0], offset[1]),
@@ -299,10 +349,11 @@ const MaterialRadialSymmetry = ({
         offsetScale,
         rotationScale,
         scaleFactor,
-        image_aspect,
+        resolvedImageAspect,
         rotation_speed,
         fps,
         tiling,
+        tileMode,
         onUpdate,
         getPropsObject,
     ])

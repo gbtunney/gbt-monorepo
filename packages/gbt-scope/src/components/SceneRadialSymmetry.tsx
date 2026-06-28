@@ -16,6 +16,7 @@ import {
     useState,
 } from 'react'
 import MaterialRadialSymmetry, {
+    defaultMaterialRadialSymmetryProps,
     type MaterialRadialSymmetryProps,
 } from './MaterialRadialSymmetry.tsx'
 import {
@@ -33,6 +34,24 @@ export type SceneRadialSymmetryProps = {
     bg_color?: Chromable
 } & Omit<MaterialRadialSymmetryProps, 'mesh'>
 
+/**
+ * Default props for the 3D mesh viewer. Single source of truth for the component
+ * defaults and the Storybook args (shared material defaults + 3D-scene values).
+ */
+export const defaultSceneRadialSymmetryProps = {
+    ...defaultMaterialRadialSymmetryProps,
+    aspect_ratio: 1 as number | 'parent',
+    bg_color: 'red' as Chromable,
+    cameraSettings: {
+        enabled: true,
+        hRotation: Math.PI / 2,
+        vRotation: Math.PI / 4,
+    } as CameraConfigPosition,
+    name: 'radial-symmetry',
+    resolution: null as 'screen' | Dimensions | null,
+    src: 'uv-checker.png',
+} satisfies SceneRadialSymmetryProps
+
 const SceneRadialSymmetry = ({
     aspect_ratio = 1,
     bg_color = 'red',
@@ -42,6 +61,7 @@ const SceneRadialSymmetry = ({
         vRotation: Math.PI / 4,
     },
     fps = 60,
+    imageAspect,
     image_aspect = 1,
 
     name = 'radial-symmetry',
@@ -57,6 +77,7 @@ const SceneRadialSymmetry = ({
     segments = 6,
     src = 'uv-checker.png',
     tiling = 1,
+    tileMode = defaultMaterialRadialSymmetryProps.tileMode,
 }: SceneRadialSymmetryProps): ReactElement => {
     const [scene, setScene] = useState<Scene | null>(null)
     const [box, setBox] = useState<Mesh | null>(null)
@@ -194,12 +215,14 @@ const SceneRadialSymmetry = ({
                         rotation={rotation}
                         scaleFactor={scaleFactor}
                         tiling={tiling}
+                        tileMode={tileMode}
                         offset={offset}
                         offset_speed={offset_speed}
                         rotationScale={rotationScale}
                         rotation_speed={rotation_speed}
                         offsetScale={offsetScale}
                         opacity={opacity}
+                        imageAspect={imageAspect}
                         image_aspect={image_aspect}
                         onInit={(props) => {
                             console.log(
