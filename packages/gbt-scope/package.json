@@ -41,7 +41,7 @@
                     "{projectRoot}/storybook-static"
                 ]
             },
-            "test": {},
+            "test:bk": {},
             "test:watch": {},
             "lint": {},
             "fix": {},
