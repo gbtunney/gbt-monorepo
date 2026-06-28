@@ -1,37 +1,23 @@
 import type { Meta } from '@storybook/react'
-import { fn } from '@storybook/test'
 import {
-    defaultSceneGBTScopeProps,
-    type SceneGBTScopeProps,
-} from '../components/SceneGBTScope.tsx'
+    defaultGbtScopeFlatViewerProps,
+    type GbtScopeFlatViewerProps,
+} from '../components/GbtScopeFlatViewer.tsx'
 import {
-    defaultSceneRadialSymmetryProps,
-    type SceneRadialSymmetryProps,
-} from '../components/SceneRadialSymmetry.tsx'
+    defaultGbtScopeMeshViewerProps,
+    type GbtScopeMeshViewerProps,
+} from '../components/GbtScopeMeshViewer.tsx'
 /* eslint  sort/object-properties: "off" */
 /* eslint filenames-simple/naming-convention: 'off'*/
 
-/**
- * Storybook default args — composed from the per-component default objects so
- * the defaults live in a single source of truth. Stories spread these.
- *
- * Explicit type annotations keep the inferred `fn()` Mock type from leaking into
- * emitted declarations (TS2883) if this file is ever part of the library build.
- */
-export const flatDefaultArgs: SceneGBTScopeProps = {
-    ...defaultSceneGBTScopeProps,
-    onInit: fn(),
-    onUpdate: fn(),
+/** Composed default args — single source of truth from the component defaults. */
+export const flatDefaultArgs: GbtScopeFlatViewerProps = {
+    ...defaultGbtScopeFlatViewerProps,
 }
 
-export const meshDefaultArgs: SceneRadialSymmetryProps = {
-    ...defaultSceneRadialSymmetryProps,
-    onInit: fn(),
-    onUpdate: fn(),
+export const meshDefaultArgs: GbtScopeMeshViewerProps = {
+    ...defaultGbtScopeMeshViewerProps,
 }
-
-/** Shared default args (flat viewer) — kept for back-compat / generic stories. */
-export const defaultArgs: SceneGBTScopeProps = flatDefaultArgs
 
 export const argTypes: Meta['argTypes'] = {
     bg_color: { control: 'color' },
@@ -56,7 +42,7 @@ export const argTypes: Meta['argTypes'] = {
         table: { category: 'General Settings' },
     },
     imageAspect: {
-        description: 'Src image aspect ratio (camelCase canonical)',
+        description: 'Src image aspect ratio',
         control: { max: 4, min: 0.01, step: 0.1, type: 'number' },
         table: { category: 'General Settings' },
     },
@@ -85,50 +71,29 @@ export const argTypes: Meta['argTypes'] = {
         table: { category: 'Graphic Settings' },
     },
 
-    //  Rotation Settings
+    //  Rotation / Offset base values
     rotation: {
         control: { max: 360, min: 0, step: 0.1, type: 'number' },
-        table: { category: 'Rotation Settings' },
-    },
-    rotation_speed: {
-        control: { max: 4, min: -4, step: 0.01, type: 'number' },
-        table: { category: 'Rotation Settings' },
+        table: { category: 'Transform' },
     },
     rotationScale: {
         control: { max: 4, min: 0.001, step: 0.001, type: 'number' },
-        table: { category: 'Rotation Settings' },
+        table: { category: 'Transform' },
     },
-
-    //  Offset Settings
     offset: {
         control: { type: 'object' },
-        table: { category: 'Offset Settings' },
-    },
-    offset_speed: {
-        control: { max: 4, min: -4, step: 0.01, type: 'number' },
-        table: { category: 'Offset Settings' },
+        table: { category: 'Transform' },
     },
     offsetScale: {
         control: { max: 4, min: 0.001, step: 0.01, type: 'number' },
-        table: { category: 'Offset Settings' },
+        table: { category: 'Transform' },
     },
 
-    //  Mouse Settings
-    mouse_curve: {
+    //  Motion — declarative animators
+    animators: {
         description:
-            'Pointer-distance response curve (GbtScopeCurve object or [min,max] tuple)',
+            'Declarative motion rules: { target, source, mode, speed, curve }[]',
         control: { type: 'object' },
-        table: { category: 'Mouse Settings' },
-    },
-    mouse_multiplier: {
-        control: { max: 1, min: 0, step: 0.001, type: 'number' },
-        table: { category: 'Mouse Settings' },
-    },
-
-    //  Animation Settings
-    fps: {
-        description: 'Frames per second',
-        control: { max: 120, min: 10, step: 1, type: 'number' },
-        table: { category: 'Animation Settings' },
+        table: { category: 'Motion' },
     },
 }
