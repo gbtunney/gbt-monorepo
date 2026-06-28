@@ -41,6 +41,9 @@
                     "{projectRoot}/storybook-static"
                 ]
             },
+            "test": {
+                "command": "tsc --build tsconfig.json"
+            },
             "test:bk": {},
             "test:watch": {},
             "lint": {},
