@@ -1,28 +1,37 @@
 import type { Meta } from '@storybook/react'
 import { fn } from '@storybook/test'
-import { defaultSceneGBTScopeProps } from '../components/SceneGBTScope.tsx'
-import { defaultSceneRadialSymmetryProps } from '../components/SceneRadialSymmetry.tsx'
+import {
+    defaultSceneGBTScopeProps,
+    type SceneGBTScopeProps,
+} from '../components/SceneGBTScope.tsx'
+import {
+    defaultSceneRadialSymmetryProps,
+    type SceneRadialSymmetryProps,
+} from '../components/SceneRadialSymmetry.tsx'
 /* eslint  sort/object-properties: "off" */
 /* eslint filenames-simple/naming-convention: 'off'*/
 
 /**
  * Storybook default args — composed from the per-component default objects so
  * the defaults live in a single source of truth. Stories spread these.
+ *
+ * Explicit type annotations keep the inferred `fn()` Mock type from leaking into
+ * emitted declarations (TS2883) if this file is ever part of the library build.
  */
-export const flatDefaultArgs = {
+export const flatDefaultArgs: SceneGBTScopeProps = {
     ...defaultSceneGBTScopeProps,
     onInit: fn(),
     onUpdate: fn(),
 }
 
-export const meshDefaultArgs = {
+export const meshDefaultArgs: SceneRadialSymmetryProps = {
     ...defaultSceneRadialSymmetryProps,
     onInit: fn(),
     onUpdate: fn(),
 }
 
 /** Shared default args (flat viewer) — kept for back-compat / generic stories. */
-export const defaultArgs = flatDefaultArgs
+export const defaultArgs: SceneGBTScopeProps = flatDefaultArgs
 
 export const argTypes: Meta['argTypes'] = {
     bg_color: { control: 'color' },
