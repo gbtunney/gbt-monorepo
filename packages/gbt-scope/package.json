@@ -5,13 +5,14 @@
     "description": "React components and hooks for the operator user interface.",
     "scripts": {
         "build:nx": "nx run $npm_package_name:build",
+        "build:storybook:nx": "nx run $npm_package_name:build:storybook",
+        "dev:nx": "nx run $npm_package_name:dev",
+        "dev:storybook": "pnpm build:ts && pnpm exec storybook dev -p 6006",
         "test:nx": "nx run $npm_package_name:test",
         "clean:nx": "nx run $npm_package_name:clean",
-        "dev:nx": "nx run $npm_package_name:dev",
         "build:storybook": "pnpm exec storybook build",
-        "build:vite": "pnpm exec vite build --config ./vite.config.ts",
-        "dev:storybook": "pnpm build:ts && pnpm exec storybook dev -p 6006",
-        "chromatic": "npx chromatic --project-token=chpt_6be402f4f5a7153 --build-script-name docs:build"
+        "chromatic": "pnpm run build:storybook:nx && pnpm exec chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build:storybook",
+        "test:chromatic": "pnpm exec dotenv -e .env.local -- pnpm run chromatic"
     },
     "nx": {
         "targets": {
@@ -27,13 +28,31 @@
                     "build:ts"
                 ]
             },
+            "build:storybook": {
+                "cache": true,
+                "dependsOn": [
+                    "build"
+                ],
+                "inputs": [
+                    "{projectRoot}/src/**.tsx",
+                    "{projectRoot}/.storybook/**/*"
+                ],
+                "outputs": [
+                    "{projectRoot}/storybook-static"
+                ]
+            },
             "test": {},
             "test:watch": {},
             "lint": {},
             "fix": {},
             "clean": {},
             "clean:ts": {},
-            "clean:build": {}
+            "clean:build": {
+                "cache": false,
+                "options": {
+                    "command": "rm -rf dist types storybook-static coverage ./*.log"
+                }
+            }
         }
     },
     "dependencies": {
@@ -64,6 +83,8 @@
         "@vitejs/plugin-react": "^6.0.2",
         "@vitest/browser-playwright": "^4.1.8",
         "@vitest/coverage-v8": "^4.1.8",
+        "chromatic": "^17.7.1",
+        "dotenv-cli": "^11.0.0",
         "playwright": "^1.58.2",
         "storybook": "^10.4.3",
         "tsdown": "^0.22.3",
@@ -73,11 +94,14 @@
     "type": "module",
     "exports": {
         ".": {
-            "types": "./types/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.js"
-        }
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        },
+        "./package.json": "./package.json"
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.cts",
     "author": {
         "name": "Gillian Tunney",
         "email": "gbtunney@mac.com"
