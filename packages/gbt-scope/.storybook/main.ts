@@ -1,6 +1,4 @@
 import type { StorybookConfig } from '@storybook/react-vite'
-import { getDirname } from '@snailicid3/config'
-
 
 const config: StorybookConfig = {
     addons: [
