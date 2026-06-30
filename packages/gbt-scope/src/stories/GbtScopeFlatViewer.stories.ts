@@ -59,5 +59,9 @@ export const MouseReactive: FlatStory = {
 
 /** Horizontal offset driven by scroll-wheel velocity. */
 export const ScrollReactive: FlatStory = {
-    args: { ...flatDefaultArgs, tileMode: 'mirror', animators: scrollAnimators },
+    args: {
+        ...flatDefaultArgs,
+        tileMode: 'mirror',
+        animators: scrollAnimators,
+    },
 }

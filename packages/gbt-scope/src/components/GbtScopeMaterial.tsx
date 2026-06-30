@@ -1,9 +1,4 @@
-import {
-    type Mesh,
-    ShaderMaterial,
-    Texture,
-    Vector2,
-} from '@babylonjs/core'
+import { type Mesh, ShaderMaterial, Texture, Vector2 } from '@babylonjs/core'
 import { type ReactElement, useEffect, useRef } from 'react'
 import { type Dimensions, getResolution } from '../helpers.ts'
 import {
@@ -59,9 +54,8 @@ const UNIFORMS = [
 ]
 
 /**
- * Kaleidoscope shader material applied to a Babylon mesh. Static uniforms update
- * reactively from props; the animated uniforms (rotation/offset/scaleFactor/
- * opacity) are driven each frame by {@link createGbtScopeDriver} from the
+ * Kaleidoscope shader material applied to a Babylon mesh. Static uniforms update reactively from props; the animated
+ * uniforms (rotation/offset/scaleFactor/ opacity) are driven each frame by {@link createGbtScopeDriver} from the
  * `animators` + live pointer/scroll inputs. No Babylon Animation is used.
  */
 const GbtScopeMaterial = ({

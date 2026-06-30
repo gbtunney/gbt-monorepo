@@ -54,10 +54,7 @@ on:
     workflow_call:
         inputs:
             ref:
-                description: >
-                    Git ref, branch, tag, or SHA to inspect. Leave empty to inspect the triggering commit. For PR callers, pass github.event.pull_request.head.sha to inspect the PR head.
-
-
+                description: Git ref, branch, tag, or SHA to inspect. Leave empty to inspect the triggering commit. For PR callers, pass github.event.pull_request.head.sha to inspect the PR head.
                 required: false
                 type: string
                 default: ''

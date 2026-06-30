@@ -7,7 +7,11 @@ import {
     type Scene,
     Vector3,
 } from '@babylonjs/core'
-import { colorUtils } from '@snailicide/g-library'
+import {
+    parseColorJS,
+    isValidColor,
+    parseColorToHexStrict,
+} from '@snailicid3/color'
 import SceneComponent from 'babylonjs-hook'
 import {
     type CSSProperties,
@@ -85,8 +89,8 @@ const GbtScopeMeshViewer = ({
     const scrollRef = useRef(createScrollState())
 
     const customStyle: CSSProperties = {
-        backgroundColor: colorUtils.isValidColor(bg_color)
-            ? colorUtils.getChromaColor(bg_color)?.hex()
+        backgroundColor: isValidColor(bg_color)
+            ? parseColorToHexStrict(bg_color)
             : 'initial',
         border: '2px solid green',
         ...(aspect_ratio !== 'parent' ? { aspectRatio: aspect_ratio } : {}),
@@ -125,7 +129,11 @@ const GbtScopeMeshViewer = ({
 
         new HemisphericLight(`light_${name}`, new Vector3(0, 1, 0), _scene)
 
-        const boxMesh = MeshBuilder.CreateBox(`box_${name}`, { size: 2 }, _scene)
+        const boxMesh = MeshBuilder.CreateBox(
+            `box_${name}`,
+            { size: 2 },
+            _scene,
+        )
         boxMesh.position.y = 1
         setBox(boxMesh)
 

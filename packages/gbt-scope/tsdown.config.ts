@@ -8,7 +8,7 @@ const plan = defineBuildPlan(pkg, {
             key: '*',
             lint: false,
             output_formats: ['esm', 'cjs', 'ts'],
-            runtime: 'node',
+            runtime: 'universal',
         },
     ],
     root: {

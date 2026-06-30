@@ -12,8 +12,8 @@ export type ScrollStateHandle = {
     /** Remove listeners. Call from the scene's onDisposeObservable. */
     detach: (target?: HTMLElement | Window) => void
     /**
-     * Decay the velocity by one frame's worth (call once per frame from the
-     * driver after reading). `factor` in [0,1]; lower = faster decay.
+     * Decay the velocity by one frame's worth (call once per frame from the driver after reading). `factor` in [0,1];
+     * lower = faster decay.
      */
     decay: (factor?: number) => void
 }
@@ -27,9 +27,8 @@ const readProgress = (): number => {
 }
 
 /**
- * Creates a mutable scroll-state object for use inside a Babylon.js scene setup
- * callback. Tracks page scroll `progress` [0,1] and a wheel-driven `velocity`
- * that the driver decays each frame. Plain factory (not a React hook) — mirrors
+ * Creates a mutable scroll-state object for use inside a Babylon.js scene setup callback. Tracks page scroll `progress`
+ * [0,1] and a wheel-driven `velocity` that the driver decays each frame. Plain factory (not a React hook) — mirrors
  * {@link createPointerState} so it can be read from the render observable.
  */
 export const createScrollState = (): ScrollStateHandle => {

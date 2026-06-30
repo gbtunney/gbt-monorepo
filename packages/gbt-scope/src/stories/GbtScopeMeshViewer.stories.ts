@@ -4,14 +4,10 @@ import type { GbtScopeAnimator } from '../motion/animator.ts'
 import { argTypes, meshDefaultArgs } from './GbtScopeShared.ts'
 /* eslint  sort/object-properties: "off" */
 
-/**
- * Chromatic runs deterministic snapshots — drop time-based animators under
- * CHROMATIC so frames are stable.
- */
+/** Chromatic runs deterministic snapshots — drop time-based animators under CHROMATIC so frames are stable. */
 const stillForChromatic = (
     animators: GbtScopeAnimator[],
-): GbtScopeAnimator[] =>
-    process.env['CHROMATIC'] === 'true' ? [] : animators
+): GbtScopeAnimator[] => (process.env['CHROMATIC'] === 'true' ? [] : animators)
 
 const meta: Meta<typeof GbtScopeMeshViewer> = {
     argTypes,

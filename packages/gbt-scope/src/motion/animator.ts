@@ -3,22 +3,15 @@ import { type GbtScopeCurve } from '../types.ts'
 
 /** Uniform-backed value an animator can drive. */
 export type GbtScopeAnimatorTarget =
-    | 'rotation'
-    | 'offset.x'
-    | 'offset.y'
-    | 'scaleFactor'
-    | 'opacity'
+    'rotation' | 'offset.x' | 'offset.y' | 'scaleFactor' | 'opacity'
 
 /** Input signal an animator reads from. */
 export type GbtScopeAnimatorSource =
-    | 'time'
-    | 'mouseDistance'
-    | 'scrollProgress'
-    | 'scrollVelocity'
+    'time' | 'mouseDistance' | 'scrollProgress' | 'scrollVelocity'
 
 /**
- * A single declarative animation rule: read `source`, shape it through `curve`,
- * scale by `speed * delta`, then `add` to (default) or `set` the `target`.
+ * A single declarative animation rule: read `source`, shape it through `curve`, scale by `speed * delta`, then `add` to
+ * (default) or `set` the `target`.
  */
 export type GbtScopeAnimator = {
     target: GbtScopeAnimatorTarget
@@ -46,9 +39,8 @@ export type GbtScopeInputs = {
 }
 
 /**
- * Applies every animator to a copy of `state` for one frame and returns the new
- * state. Each animator's source value is curved, scaled by `speed * delta`
- * (frame-rate independent), then added to or set on its target.
+ * Applies every animator to a copy of `state` for one frame and returns the new state. Each animator's source value is
+ * curved, scaled by `speed * delta` (frame-rate independent), then added to or set on its target.
  */
 export const applyAnimators = (
     state: GbtScopeState,

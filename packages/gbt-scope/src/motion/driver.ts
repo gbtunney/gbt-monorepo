@@ -14,8 +14,8 @@ export type GbtScopeDriverOptions = {
     /** Live list of animators (read every frame). */
     animatorsRef: MutableRef<GbtScopeAnimator[]>
     /**
-     * Persistent runtime state. The driver accumulates into it each frame; the
-     * owner re-seeds `current` from base props to make changes live.
+     * Persistent runtime state. The driver accumulates into it each frame; the owner re-seeds `current` from base props
+     * to make changes live.
      */
     stateRef: MutableRef<GbtScopeState>
     pointer: PointerStateHandle
@@ -27,13 +27,15 @@ const writeState = (material: ShaderMaterial, state: GbtScopeState): void => {
     material.setFloat('uRotation', state.rotation)
     material.setFloat('uScaleFactor', state.scaleFactor)
     material.setFloat('uOpacity', state.opacity)
-    material.setVector2('uOffset', new Vector2(state.offset[0], state.offset[1]))
+    material.setVector2(
+        'uOffset',
+        new Vector2(state.offset[0], state.offset[1]),
+    )
 }
 
 /**
- * Registers a single render-loop observer that drives the material's animated
- * uniforms from the animators + live inputs, frame-rate independent via
- * `engine.getDeltaTime()`. Replaces Babylon's Animation API. Returns a dispose
+ * Registers a single render-loop observer that drives the material's animated uniforms from the animators + live
+ * inputs, frame-rate independent via `engine.getDeltaTime()`. Replaces Babylon's Animation API. Returns a dispose
  * function that removes the observer.
  */
 export const createGbtScopeDriver = (
