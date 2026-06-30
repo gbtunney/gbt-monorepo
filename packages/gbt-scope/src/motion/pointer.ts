@@ -14,13 +14,12 @@ export type PointerStateHandle = {
 }
 
 /**
- * Creates a mutable pointer-state object for use inside a Babylon.js scene setup
- * callback. Intentionally NOT a React hook: `onSceneReady` runs outside React's
- * render cycle, so a hook's state would be stale inside the render observable.
- * The returned `state` object is mutated in place and is safe to read every frame.
+ * Creates a mutable pointer-state object for use inside a Babylon.js scene setup callback. Intentionally NOT a React
+ * hook: `onSceneReady` runs outside React's render cycle, so a hook's state would be stale inside the render
+ * observable. The returned `state` object is mutated in place and is safe to read every frame.
  *
- * Position is normalized to [-1, 1] on both axes (canvas-relative) and resets to
- * [0, 0] when the pointer leaves the canvas.
+ * Position is normalized to [-1, 1] on both axes (canvas-relative) and resets to [0, 0] when the pointer leaves the
+ * canvas.
  */
 export const createPointerState = (): PointerStateHandle => {
     const _state = { x: 0, y: 0 }

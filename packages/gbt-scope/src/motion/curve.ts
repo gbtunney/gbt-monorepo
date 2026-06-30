@@ -1,9 +1,8 @@
 import { type GbtScopeCurve } from '../types.ts'
 
 /**
- * Maps an input value through a {@link GbtScopeCurve}: deadzone → gain →
- * exponent → clamp → optional invert. The input is treated by magnitude
- * (`Math.abs`), so direction is supplied by `invert`, not the sign of `value`.
+ * Maps an input value through a {@link GbtScopeCurve}: deadzone → gain → exponent → clamp → optional invert. The input
+ * is treated by magnitude (`Math.abs`), so direction is supplied by `invert`, not the sign of `value`.
  */
 export const applyCurve = (
     value: number,
@@ -24,8 +23,8 @@ export const applyCurve = (
 }
 
 /**
- * Type guard distinguishing the legacy `[min, max]` tuple form of `mouse_curve`
- * from the richer {@link GbtScopeCurve} object form.
+ * Type guard distinguishing the legacy `[min, max]` tuple form of `mouse_curve` from the richer {@link GbtScopeCurve}
+ * object form.
  */
 export const isTupleCurve = (
     value: [number, number] | GbtScopeCurve,
@@ -36,9 +35,8 @@ export const isTupleCurve = (
     typeof value[1] === 'number'
 
 /**
- * Bridges the legacy `[min, max]` tuple (plus a separate `mouse_multiplier`)
- * into an equivalent {@link GbtScopeCurve}. With the historical defaults
- * `[0, 0.015]` and multiplier `0.01`, `applyCurve` reproduces the old inline
+ * Bridges the legacy `[min, max]` tuple (plus a separate `mouse_multiplier`) into an equivalent {@link GbtScopeCurve}.
+ * With the historical defaults `[0, 0.015]` and multiplier `0.01`, `applyCurve` reproduces the old inline
  * `Math.min(Math.max(dist * mult, min), max)` clamp exactly.
  */
 export const tupleToGbtScopeCurve = (
